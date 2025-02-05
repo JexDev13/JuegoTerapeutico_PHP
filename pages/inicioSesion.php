@@ -4,6 +4,12 @@ require __DIR__ . '/../controllers/userAuth.php';
 
 
 session_start();
+
+if (isset($_SESSION['idUsuario'])) {
+    header("Location: paciente.php");
+    exit();
+}
+
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
