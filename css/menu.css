@@ -1,0 +1,11 @@
+.nav-link {
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: hsl(20, 100%, 60%) !important;
+    background-color: white;
+}

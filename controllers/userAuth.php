@@ -33,7 +33,7 @@ class UserAuth
 
     public function login($correo, $contrasena)
     {
-        $stmt = $this->pdo->prepare("SELECT id, correo, contraseña FROM users WHERE correo = ?");
+        $stmt = $this->pdo->prepare("SELECT id, correo, contraseña, nombre, apellido FROM users WHERE correo = ?");
         $stmt->execute([$correo]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -51,4 +51,12 @@ class UserAuth
             return ['error' => 'Usuario no registrado. <a href="registro.php">Regístrate aquí</a>.'];
         }
     }
+}
+
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_start();
+    session_unset();
+    session_destroy();
+    header("Location: /../tase/index.php");
+    exit();
 }
