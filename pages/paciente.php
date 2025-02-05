@@ -49,7 +49,6 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/framework.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <?php include __DIR__ . '/../components/menu.php'; ?>
 
 <body class="background-image margin-0">
