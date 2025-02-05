@@ -22,6 +22,10 @@ $buttonText = "Registrar paciente";
 $formMethod = "post";
 $formAction = "/../tase/controllers/paciente_crud.php";
 
+unset($_SESSION['cedula']);
+unset($_SESSION['nombre_completo']);
+unset($_SESSION['edad']);
+
 // Leer los pacientes desde la base de datos
 $sql = "SELECT id, cedula, CONCAT(nombre, ' ', apellido) AS nombre_completo, fechaNacimiento 
         FROM paciente 
@@ -45,13 +49,12 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/framework.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<header>
-    <?php include __DIR__ . '/../components/menu.php'; ?>
-</header>
+
+<?php include __DIR__ . '/../components/menu.php'; ?>
 
 <body class="background-image margin-0">
     <div class="p-4" style="min-height: 85vh; width: 100%;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center mb-3">
             <!-- Nuevo paciente -->
             <button id="new_patient_btn"
                 class="boton back-color-cuaternary color-tertiary d-flex px-4 py-2 rounded align-items-center justify-content-center w-25">
@@ -119,7 +122,7 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if (!empty($pacientes)) {
                         foreach ($pacientes as $paciente) {
                             echo "<tr>";
-                            echo "<td>" . $paciente["cedula"] . "</td>";
+                            echo "<td><a href='../pages/tableroJuegos.php?cedula=" . $paciente["cedula"] . "&nombre_completo=" . urlencode($paciente["nombre_completo"]) . "&edad=" . calcularEdad($paciente['fechaNacimiento']) . "'>" . $paciente["cedula"] . "</a></td>";
                             echo "<td>" . $paciente["nombre_completo"] . "</td>";
                             echo "<td>" . calcularEdad($paciente['fechaNacimiento']) . "</td>";
                             echo "<td class='text-center'>
@@ -142,9 +145,10 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </table>
         </div>
     </div>
+    <?php include __DIR__ . '/../components/footer.php'; ?>
 </body>
 
-<?php include __DIR__ . '/../components/footer.php'; ?>
+
 
 <script>
     function validateAge() {
@@ -306,7 +310,7 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         if (response.pacientes.length > 0) {
                             response.pacientes.forEach(function (paciente) {
                                 var row = "<tr>";
-                                row += "<td>" + paciente.cedula + "</td>";
+                                row += "<td><a href='../pages/tableroJuegos.php?cedula=" + paciente.cedula + "&nombre_completo=" + encodeURIComponent(paciente.nombre_completo) + "&edad=" + calcularEdad(paciente.fechaNacimiento) + "'>" + paciente.cedula + "</a></td>";
                                 row += "<td>" + paciente.nombre_completo + "</td>";
                                 row += "<td>" + calcularEdad(paciente.fechaNacimiento) + "</td>";
                                 row += "<td class='text-center'>" +
