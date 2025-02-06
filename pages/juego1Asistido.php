@@ -136,7 +136,7 @@
         let minutos = 0; // Minutos del cronómetro
         let cronometroInterval; // Intervalo del cronómetro
         let cronometroPausado = false; // Estado del cronómetro (pausado o no)
-        const juego = "Pesos mayor a menor";
+        const juego = "Pesos menor a mayor";
         const dificultad = "Fácil";
         iniciarCronometro();
 
