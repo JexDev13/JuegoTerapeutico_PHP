@@ -11,6 +11,8 @@ if (!isset($_SESSION['idUsuario'])) {
     exit();
 }
 
+unset($_SESSION['registroInsertado']);
+
 // Obtener los pacientes disponibles para el terapeuta
 $sql = "SELECT id, cedula, CONCAT(nombre, ' ', apellido) AS nombre_completo , fechaNacimiento
         FROM paciente 
@@ -21,12 +23,35 @@ $stmt->execute();
 $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Verificar si un paciente ha sido seleccionado
-if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
+if (isset($_GET['id'], $_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
+    $_SESSION['pacienteId'] = $_GET['id'];
     $_SESSION['cedula'] = $_GET['cedula'];
     $_SESSION['nombre_completo'] = $_GET['nombre_completo'];
     $_SESSION['edad'] = $_GET['edad'];
 }
 
+// Obtener las estadísticas del paciente con el id almacenado en la sesión
+if (isset($_SESSION['pacienteId'])) {
+    $sql = "
+    SELECT 
+        id,
+        tiempoJuego,
+        movimientos, 
+        evaluacion, 
+        tipoJuego, 
+        dificultad, 
+        DATE(fecha) AS fecha, 
+        DATE_FORMAT(fecha, '%h:%i:%s %p') AS hora
+    FROM estadisticas
+    WHERE pacienteId = :pacienteId";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':pacienteId', $_SESSION['pacienteId'], PDO::PARAM_INT);
+    $stmt->execute();
+    $estadisticas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Obtener el número de juegos completos
+    $numJuegosCompletados = count($estadisticas);
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,9 +63,6 @@ if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
     <title>Estadísticas del paciente</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../css/estadisticasPaciente.css">
-    <link rel="stylesheet" href="../css/tableroJuegos.css">
-    <link rel="stylesheet" href="../css/framework.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -58,6 +80,7 @@ if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
                     $fechaNacimiento = new DateTime($paciente['fechaNacimiento']);
                     $hoy = new DateTime();
                     $edad = $hoy->diff($fechaNacimiento)->y;
+                    $_SESSION['pacienteId'] = $paciente['id'];
                     $_SESSION['cedula'] = $paciente['cedula'];
                     $_SESSION['nombre_completo'] = $paciente['nombre_completo'];
                     $_SESSION['edad'] = $edad;
@@ -99,16 +122,17 @@ if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
                         <p><strong>Cédula:</strong> <?php echo $_SESSION['cedula'] ?? 'No disponible'; ?></p>
                         <p><strong>Nombre:</strong> <?php echo $_SESSION['nombre_completo'] ?? 'No disponible'; ?></p>
                         <p><strong>Edad:</strong> <?php echo $_SESSION['edad'] ?? 'No disponible'; ?></p>
-                        <p><strong>Juegos Completados: </strong><span id="total-juegos">0</span></p>
+                        <p><strong>Juegos Completados: </strong><span
+                                id="total-juegos"><?php echo $numJuegosCompletados; ?></span></p>
                     </div>
                 </div>
 
-                <button type="button" id="boton-r"
-                    class="boton back-color-cuaternary color-tertiary d-flex align-items-center justify-content-center px-4 py-2 rounded hover-text-light w-25"
-                    onclick="window.history.back();">
+                <a href="tableroJuegos.php"
+                    class="boton back-color-cuaternary color-tertiary d-flex px-4 py-2 rounded align-items-center justify-content-center w-25 text-decoration-none border-1-black"
+                    style="font-family: sans-serif;">
                     <span class="material-icons">arrow_back</span>
                     <span class="ms-2">Regresar</span>
-                </button>
+                </a>
             </div>
             <!-- Sección 2 -->
             <div>
@@ -119,13 +143,25 @@ if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
                             <th>Movimientos</th>
                             <th>Tiempo</th>
                             <th>Rango de calidad</th>
-                            <th>Número de juego</th>
+                            <th>Juego</th>
+                            <th>Dificultad</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Aqui va los datos de la tabla-->
+                        <?php foreach ($estadisticas as $index => $estadistica): ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><?php echo $estadistica['movimientos']; ?></td>
+                                <td><?php echo $estadistica['tiempoJuego']; ?></td>
+                                <td><?php echo $estadistica['evaluacion']; ?></td>
+                                <td><?php echo $estadistica['tipoJuego']; ?></td>
+                                <td><?php echo $estadistica['dificultad']; ?></td>
+                                <td><?php echo $estadistica['fecha']; ?></td>
+                                <td><?php echo $estadistica['hora']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

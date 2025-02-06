@@ -11,6 +11,8 @@ if (!isset($_SESSION['idUsuario'])) {
     exit();
 }
 
+unset($_SESSION['registroInsertado']);
+
 // Obtener los pacientes disponibles para el terapeuta
 $sql = "SELECT id, cedula, CONCAT(nombre, ' ', apellido) AS nombre_completo , fechaNacimiento
         FROM paciente 
@@ -21,7 +23,8 @@ $stmt->execute();
 $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Verificar si un paciente ha sido seleccionado
-if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
+if (isset($_GET['id'], $_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
+    $_SESSION['pacienteId'] = $_GET['id'];
     $_SESSION['cedula'] = $_GET['cedula'];
     $_SESSION['nombre_completo'] = $_GET['nombre_completo'];
     $_SESSION['edad'] = $_GET['edad'];
@@ -58,6 +61,7 @@ if (isset($_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])) {
                     $fechaNacimiento = new DateTime($paciente['fechaNacimiento']);
                     $hoy = new DateTime();
                     $edad = $hoy->diff($fechaNacimiento)->y;
+                    $_SESSION['pacienteId'] = $paciente['id'];
                     $_SESSION['cedula'] = $paciente['cedula'];
                     $_SESSION['nombre_completo'] = $paciente['nombre_completo'];
                     $_SESSION['edad'] = $edad;

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../css/framework.css">
 </head>
 
-<body class="background-image margin-0 d-flex flex-column" style="min-height: 100vh; padding: 0 20px;">
+<body class="background-image margin-0 d-flex flex-column" style="min-height: 100vh; padding: 50px 75px;">
     <div class="p-4 flex-grow-1" style="width: 100%;">
         <h1 class="text-center mb-2 font-hartsfolk">Ordena los objetos del más liviano al más pesado.</h1>
         <div class="border border-light rounded mb-3 p-4 bg-light shadow-sm font-hartsfolk">
@@ -111,7 +111,8 @@
         let minutos = 0; // Minutos del cronómetro
         let cronometroInterval; // Intervalo del cronómetro
         let cronometroPausado = false; // Estado del cronómetro (pausado o no)
-        const juego = "Juego1";
+        const juego = "Pesos menor a mayor";
+        const dificultad = "Dificil";
         iniciarCronometro();
 
         const Items = Array.from(document.querySelectorAll('.object')).filter(item => !item.id.startsWith('bloque'));
@@ -206,7 +207,7 @@
 
                 const tiempoActual = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
                 limpiarCronometro();
-                window.location.href = `ventanaGanadora.html?movimientos=${movimiento}&tiempo=${tiempoActual}&juego=${juego}`;
+                window.location.href = `ventanaGanadora.php?movimientos=${movimiento}&tiempo=${tiempoActual}&juego=${juego}&dificultad=${dificultad}`;
             }
         }
         //cargar cornometro 

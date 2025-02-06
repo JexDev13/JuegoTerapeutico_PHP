@@ -25,6 +25,7 @@ $formAction = "/../tase/controllers/paciente_crud.php";
 unset($_SESSION['cedula']);
 unset($_SESSION['nombre_completo']);
 unset($_SESSION['edad']);
+unset($_SESSION['registroInsertado']);
 
 // Leer los pacientes desde la base de datos
 $sql = "SELECT id, cedula, CONCAT(nombre, ' ', apellido) AS nombre_completo, fechaNacimiento 
