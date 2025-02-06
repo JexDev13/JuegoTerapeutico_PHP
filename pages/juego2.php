@@ -17,20 +17,18 @@
 
 <body class="background-image margin-0 d-flex flex-column" style="min-height: 100vh; padding: 50px 75px;">
     <div class="d-flex flex-column justify-content-center align-items-center" style="width: 100%;">
-        <h1 class="text-center mb-2 font-hartsfolk">Ordena los objetos del más liviano al más pesado</h1>
         <div class="mb-3 p-4 font-hartsfolk w-100">
-            <h2 class="text-start mb-4 fs-4">Arrastra y suelta los objetos en el orden correcto</h2>
+            <h1 class="text-center mb-2 font-hartsfolk">Ordena los objetos del más liviano al más pesado</h1>
+            <h2 class="text-start mb-4 fs-4">Arrastra y suelta los objetos en el orden correcto.</h2>
             <div class="d-flex justify-content-between align-items-center w-100">
-                <button id="pausarBtn" class="btn btn-warning mt-3 d-flex justify-content-center align-items-center">
-                    Pausar
-                </button>
+                <button id="pausarBtn"
+                    class="btn btn-warning mt-3 d-flex justify-content-center align-items-center">Pausar</button>
                 <p id="contador" class="font-woliu w-25">Movimientos: 0</p>
                 <p id="cronometro" class="font-woliu w-25">Tiempo: 00:00</p>
+
             </div>
         </div>
 
-
-        <!-- Área de juego donde se mostrarán los objetos -->
         <div class="game-area d-flex justify-content-between align-items-center w-75 h-100" id="gameArea1">
             <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="item1"
                 data-weight="0.01">Papel</div>
@@ -110,18 +108,22 @@
                 <p class="text-start fs-5">Arrastra aquí las palabras</p>
             </div>
             <div class="game-area  d-flex justify-content-between p-5" id="dropArea">
-                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque1" style="margin-right: 5px;"></div>
-                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque2" style="margin-right: 5px;"></div>
-                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque3" style="margin-right: 5px;"></div>
-                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque4" style="margin-right: 5px;"></div>
-                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque5"></div>
+                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque1">
+                </div>
+                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque2">
+                </div>
+                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque3">
+                </div>
+                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque4">
+                </div>
+                <div class="object border-1-black rounded" style="min-height: 50px;" draggable="true" id="bloque5">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Mensaje de feedback -->
     <div class="message" id="message"></div>
-    </div>
 
     <div id="pausa" class="modal" style="display: none;">
         <div class="modal_content">
@@ -139,8 +141,8 @@
         let minutos = 0; // Minutos del cronómetro
         let cronometroInterval; // Intervalo del cronómetro
         let cronometroPausado = false; // Estado del cronómetro (pausado o no)
-        const juego = "Pesos menor a mayor";
-        const dificultad = "Difícil";
+        const juego = "Pesos mayor a menor";
+        const dificultad = "Fácil";
         iniciarCronometro();
 
         const Items = Array.from(document.querySelectorAll('.object')).filter(item => !item.id.startsWith('bloque'));
@@ -153,7 +155,7 @@
             const itemsAleatorios = Items.sort(() => 0.5 - Math.random()).slice(0, 5);
 
             // Ordenar los items seleccionados por su peso para mantener el orden correcto
-            const itemRandom = itemsAleatorios.sort((a, b) => a.getAttribute('data-weight') - b.getAttribute('data-weight'));
+            const itemRandom = itemsAleatorios.sort((a, b) => b.getAttribute('data-weight') - a.getAttribute('data-weight'));
 
             // Mostrar los items seleccionados en la parte superior y asignar sus posiciones correctas
             itemRandom.forEach((item, index) => {
@@ -209,7 +211,51 @@
                 // Verificamos el orden automáticamente después de soltar
                 ordenCorrecto();
             });
+            // Eventos para dispositivos móviles
+            item.addEventListener('touchstart', function (e) {
+                draggedItem = this;
+                setTimeout(() => this.style.visibility = 'hidden', 0);
+                e.preventDefault();
+            });
+
+            item.addEventListener('touchend', function (e) {
+                setTimeout(() => this.style.visibility = 'visible', 0);
+                if (draggedItem !== null) {
+                    // Incrementar el movimiento al soltar
+                    movimiento++;
+                    document.getElementById('contador').innerText = `Movimientos: ${movimiento}`;
+                    // Encontrar el elemento debajo del toque final
+                    const touchLocation = e.changedTouches[0];
+                    const element = document.elementFromPoint(touchLocation.clientX, touchLocation.clientY);
+                    if (element && element.classList.contains('object') && element !== draggedItem) {
+                        // Intercambiamos los objetos arrastrados
+                        const tempHTML = element.innerHTML;
+                        const tempWeight = element.getAttribute('data-weight');
+                        const tempId = element.id;
+
+                        // Intercambiamos contenido y atributos
+                        element.innerHTML = draggedItem.innerHTML;
+                        element.setAttribute('data-weight', draggedItem.getAttribute('data-weight'));
+                        element.id = draggedItem.id;
+
+                        draggedItem.innerHTML = tempHTML;
+                        draggedItem.setAttribute('data-weight', tempWeight);
+                        draggedItem.id = tempId;
+                    }
+                }
+                draggedItem = null;
+                // Verificamos el orden automáticamente después de soltar
+                ordenCorrecto();
+            });
+
+            item.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            });
+
+
+
         });
+        // TODO: Verificar la victoria con los 7 conjuntos y un check cuando un conjunto esté bien ordenado.
 
         // Función para verificar si los objetos están en el orden correcto
         function ordenCorrecto() {
@@ -324,8 +370,6 @@
             limpiarCronometro();
             window.location.href = "tableroJuegos.php"
         }
-
-
     </script>
 
 </body>

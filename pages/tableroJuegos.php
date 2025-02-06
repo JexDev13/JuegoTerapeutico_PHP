@@ -161,7 +161,7 @@ if (isset($_GET['id'], $_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])
                                     <button
                                         class="boton back-color-cuaternary color-tertiary d-flex px-4 py-2 rounded align-items-center justify-content-center w-100 text-decoration-none border-1-black mb-2"
                                         style="font-family: sans-serif;" data-bs-dismiss="modal" aria-label="Close"
-                                        onclick="location.href='juego2.php'">
+                                        onclick="location.href='juego2Asistido.php'">
                                         <span class="material-icons">sentiment_very_satisfied</span>
                                         <span class="ms-2">Jugar con pesos</span>
                                     </button>
@@ -169,7 +169,8 @@ if (isset($_GET['id'], $_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])
                                     <button
                                         class="boton back-color-cuaternary color-tertiary d-flex px-4 py-2 rounded align-items-center justify-content-center w-100 text-decoration-none border-1-black"
                                         style="font-family: sans-serif;" data-bs-dismiss="modal" aria-label="Close"
-                                        onclick="location.href='juego2Asistido.php'">
+                                        
+                                        onclick="location.href='juego2.php'">
                                         <span class="material-icons">sentiment_satisfied</span>
                                         <span class="ms-2">Jugar sin pesos</span>
                                     </button>
@@ -193,7 +194,7 @@ if (isset($_GET['id'], $_GET['cedula'], $_GET['nombre_completo'], $_GET['edad'])
                                     <button
                                         class="boton back-color-cuaternary color-tertiary d-flex px-4 py-2 rounded align-items-center justify-content-center w-100 text-decoration-none border-1-black"
                                         style="font-family: sans-serif;" data-bs-dismiss="modal" aria-label="Close"
-                                        onclick="location.href='juego3Asistido.php'">
+                                        onclick="location.href='juego3.php'">
                                         <span class="material-icons">sentiment_satisfied</span>
                                         <span class="ms-2">Jugar sin pistas</span>
                                     </button>
