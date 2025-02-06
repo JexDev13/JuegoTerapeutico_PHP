@@ -95,7 +95,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `nombre`, `apellido`, `correo`, `contraseña`, `isactive`, `dt`) VALUES
-(1, 'Jeremy', 'Arias', 'jeremyismael20009@gmail.com', '$2y$10$0F5WVnE4e1ZQ7vQukgepm.zZEA2xhjox5vr9A6SZcZ9e1iKXboBnu', 1, '2025-02-05 22:33:18');
+(1, 'Jeremy', 'Arias', 'jeremyismael20009@gmail.com', '$2y$10$zT46.KLt8GeRXgbM8QKcpOF.vYzf6/iq12.q9WXylyTbc6LBzDqeS', 1, '2025-02-05 22:33:18');
 
 --
 -- Índices para tablas volcadas
