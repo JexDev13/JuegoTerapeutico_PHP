@@ -25,6 +25,7 @@ $formAction = "/../tase/controllers/paciente_crud.php";
 unset($_SESSION['cedula']);
 unset($_SESSION['nombre_completo']);
 unset($_SESSION['edad']);
+unset($_SESSION['registroInsertado']);
 
 // Leer los pacientes desde la base de datos
 $sql = "SELECT id, cedula, CONCAT(nombre, ' ', apellido) AS nombre_completo, fechaNacimiento 
@@ -49,7 +50,6 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/framework.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <?php include __DIR__ . '/../components/menu.php'; ?>
 
 <body class="background-image margin-0">
